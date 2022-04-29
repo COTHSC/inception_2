@@ -1,0 +1,47 @@
+version : "3"
+services:
+        php: 
+          restart: always
+          depends_on:
+            - "db"
+          env_file:
+            - .env
+          build: ./php/
+          container_name: php
+          networks:
+            - frontend
+            - backend
+          volumes:
+            - ./php/srcs/www.conf:/etc/php7/php-fpm.d/www.conf
+            - ./volumes/wordpress_files/:/srv/
+          ports:
+            - "9000:9000"
+        nginx:
+          restart: always
+          build: ./nginx/
+          depends_on:
+            - "php"
+          container_name: nginx
+          networks:
+            - frontend
+          volumes:
+            - ./nginx/srcs/http.d/myserver.conf:/etc/nginx/nginx.conf
+            - ./volumes/wordpress_files/:/srv/
+          ports:
+            - "443:443"
+        db:
+          restart: always
+          build: ./db/
+          container_name: db
+          networks:
+            - backend
+          env_file:
+            - .env
+          volumes:
+            - ./volumes/database/:/var/lib/mysql-bin/
+          ports:
+            - "3306"
+
+networks:
+  frontend:
+  backend:
