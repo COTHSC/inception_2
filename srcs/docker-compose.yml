@@ -13,7 +13,7 @@ services:
             - backend
           volumes:
             - ./php/srcs/www.conf:/etc/php7/php-fpm.d/www.conf
-            - ./volumes/wordpress_files/:/srv/
+            - ${WORDPRESS_VOLUME}:/srv/
           ports:
             - "9000:9000"
         nginx:
@@ -24,9 +24,11 @@ services:
           container_name: nginx
           networks:
             - frontend
+          env_file:
+            - .env
           volumes:
             - ./nginx/srcs/http.d/myserver.conf:/etc/nginx/nginx.conf
-            - ./volumes/wordpress_files/:/srv/
+            - ${WORDPRESS_VOLUME}:/srv/
           ports:
             - "443:443"
         db:
@@ -38,7 +40,7 @@ services:
           env_file:
             - .env
           volumes:
-            - ./volumes/database/:/var/lib/mysql-bin/
+            - ${DATABASE_VOLUME}:/var/lib/mysql/
           ports:
             - "3306"
 

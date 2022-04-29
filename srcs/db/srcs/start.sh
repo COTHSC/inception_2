@@ -18,10 +18,10 @@ DELETE FROM	mysql.user WHERE User='';
 DROP DATABASE test;
 DELETE FROM mysql.db WHERE Db='test';
 DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
-ALTER USER 'root'@'localhost' IDENTIFIED BY '1';
-CREATE DATABASE IF NOT EXISTS wordpress CHARACTER SET utf8 COLLATE utf8_general_ci;
-CREATE USER IF NOT EXISTS 'jean'@'%' IDENTIFIED by '1';
-GRANT ALL PRIVILEGES ON wordpress.* TO 'jean'@'%';
+ALTER USER 'root'@'localhost' IDENTIFIED BY "${MY_SQL_ROOT_PASSWORD}";
+CREATE DATABASE IF NOT EXISTS ${MY_SQL_DATABASE} CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE USER IF NOT EXISTS "${MY_SQL_USER}"@'%' IDENTIFIED by "${MY_SQL_PASSWORD}";
+GRANT ALL PRIVILEGES ON ${MY_SQL_DATABASE}.* TO "${MY_SQL_USER}"@'%';
 FLUSH PRIVILEGES;
 EOF
 	/usr/bin/mysqld --user=mysql --bootstrap < $tfile
